@@ -1,6 +1,6 @@
 # Dynamic Pricing Optimization for Retail Fashion
 
-## Problem Description
+## Problem Description  
 
 In the retail fashion market, customers compare products and prices across different brands before making their final purchase decisions. Since pricing strategies have become increasingly crucial, we have decided to develop an information system that helps customers analyze and compare retail prices efficiently.  
 
@@ -11,3 +11,7 @@ For example, using the system, a user can easily compare the prices of jeans fro
 ## Project Goals
 
 The project has two key goals. The first is to serve customers by providing an intuitive tool to filter by product, brand, and season in order to find the best value. The second is to support businesses by delivering insights into competitive pricing and illustrating how seasonal trends influence retail pricing strategies.  
+
+## License 
+
+https://www.apache.org/licenses/LICENSE-2.0
