@@ -59,20 +59,6 @@ function load_and_normalize(path::AbstractString)
     df.season   = lowercase.(strip.(string.(df.season)))
     df.season   = replace.(df.season, "fall" => "autumn")
 
-    # (Optional) If you want to deduplicate to latest per product, uncomment block below.
-    # For your definition, we simply average the values in the current_price column as-is.
-    # date_col = first(filter(c -> c in names(df), [:date, :timestamp, :scraped_at, :last_updated]), nothing)
-    # prod_id  = first(filter(c -> c in names(df), [:product_id, :sku, :id, :product_name, :name, :title]), nothing)
-    # if date_col !== nothing && prod_id !== nothing
-    #     try
-    #         df[!, date_col] = DateTime.(string.(df[!, date_col]))
-    #         sort!(df, [prod_id, date_col])
-    #         df = unique(df, prod_id; keep = :last)
-    #     catch
-    #         @warn "Could not parse date column $(date_col); skipping latest-per-product reduction."
-    #     end
-    # end
-
     return df
 end
 
