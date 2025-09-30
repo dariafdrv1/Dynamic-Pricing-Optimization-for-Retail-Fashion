@@ -1,23 +1,21 @@
-# season_tables_all_brands.jl
-# Prints 4 tables (Summer/Autumn/Winter/Spring):
-# rows = ALL brands from the dataset (always listed)
-# cols = Dress / Pants / Tops
-# cells = average *current* price; missing if no data for that (brand, season, category)
-
+# season_tables_dresses_current_price.jl
+# For each season, produce a table:
+# rows = ALL brands
+# col  = avg_current_price_dress  (mean of current_price for items with category containing "dress" in that season)
+#
 # If needed the first time:
 # import Pkg; Pkg.add(["CSV","DataFrames","Dates","Statistics"])
 
 using CSV, DataFrames, Dates, Statistics
 
-# --------- CONFIG ----------
-csv_path = "/Users/dfedorova/github/DashasCode/fashion_boutique_dataset.csv"  # <— set path
-categories_to_show = ["dress","pants","tops"]                # output columns (lowercase)
-seasons_to_show    = ["summer","autumn","winter","spring"]   # "fall" → "autumn"
-save_csv           = true
-outdir             = "season_tables"
-# ---------------------------
+# ===== CONFIG =====
+csv_path = "/Users/dfedorova/github/DashasCode/fashion_boutique_dataset.csv"  # <- set to your file
+seasons_to_show = ["summer","autumn","winter","spring"]  # "fall" will be normalized to "autumn"
+save_csv = true
+outdir   = "season_tables_dresses"
+# ==================
 
-# --------- helpers ---------
+# --- helpers ---
 normbrand(s) = begin
     if s === missing; return missing end
     t = lowercase(strip(String(s)))
@@ -31,138 +29,97 @@ normbrand(s) = begin
     end
 end
 
-# collapse messy category labels to our 3 buckets
-function normcategory(s)
+cleancat(s) = begin
     if s === missing; return missing end
-    t = lowercase(strip(String(s)))
-    t = replace(t, r"[-_/]" => " ")
-    if occursin("dress", t)
-        "dress"
-    elseif occursin("pant", t) || occursin("trouser", t)
-        "pants"
-    elseif occursin("top", t) || occursin("tee", t) || occursin("t shirt", t) || occursin("shirt", t) || occursin("blouse", t)
-        "tops"
-    else
-        t # other categories kept as-is
-    end
+    t = String(s)
+    t = replace(t, r"[-_]+" => " ")
+    t = replace(t, r"\s+" => " ")
+    strip(t)
 end
 
-function pick_price_col(df::DataFrame)
-    for c in (:current_price, :price, :sale_price, :list_price)
-        if c in names(df); return c end
-    end
-    error("No price column found. Expected one of: current_price, price, sale_price, list_price.")
+function ensure_current_price(df::DataFrame)
+    # we REQUIRE current_price per your definition
+    haskey( Dict(Symbol.(names(df)) .=> 1), :current_price ) || error("Missing required column: current_price")
 end
 
-function pick_date_col(df::DataFrame)
-    for c in (:date, :timestamp, :scraped_at, :last_updated)
-        if c in names(df); return c end
+function load_and_normalize(path::AbstractString)
+    df = CSV.read(path, DataFrame)
+    # lowercase column names to Symbols
+    rename!(df, Dict(n => Symbol(lowercase(String(n))) for n in names(df)))
+
+    # required columns
+    for req in [:brand, :category, :season]
+        req in names(df) || error("Missing required column: $(req)")
     end
-    return nothing
+    ensure_current_price(df)
+
+    # normalize fields
+    df.brand    = normbrand.(df.brand)
+    df.category = cleancat.(df.category)
+    df.season   = lowercase.(strip.(string.(df.season)))
+    df.season   = replace.(df.season, "fall" => "autumn")
+
+    # (Optional) If you want to deduplicate to latest per product, uncomment block below.
+    # For your definition, we simply average the values in the current_price column as-is.
+    # date_col = first(filter(c -> c in names(df), [:date, :timestamp, :scraped_at, :last_updated]), nothing)
+    # prod_id  = first(filter(c -> c in names(df), [:product_id, :sku, :id, :product_name, :name, :title]), nothing)
+    # if date_col !== nothing && prod_id !== nothing
+    #     try
+    #         df[!, date_col] = DateTime.(string.(df[!, date_col]))
+    #         sort!(df, [prod_id, date_col])
+    #         df = unique(df, prod_id; keep = :last)
+    #     catch
+    #         @warn "Could not parse date column $(date_col); skipping latest-per-product reduction."
+    #     end
+    # end
+
+    return df
 end
 
-function pick_product_id(df::DataFrame)
-    for c in (:product_id, :sku, :id, :product_name, :name, :title)
-        if c in names(df); return c end
-    end
-    return nothing
-end
-
-fmean(v) = begin
+# safe mean of possibly string-typed current_price
+fmean_current(v) = begin
     vals = skipmissing(tryparse.(Float64, string.(v)))
     isempty(vals) ? missing : mean(collect(vals))
 end
 
-# --------- load & normalize ---------
-function load_and_normalize(path::AbstractString)
-    df = CSV.read(path, DataFrame)
-    # lowercase col names
-    rename!(df, Dict(n => Symbol(lowercase(String(n))) for n in names(df)))
+# Build one season table: ALL brands listed, column avg_current_price_dress
+function table_one_season_dresses(df_all::DataFrame, season::String)
+    # season filter (substring match, e.g., "summer 2024")
+    ds = df_all[occursin.(season, df_all.season), :]
 
-    for req in [:brand, :category, :season]
-        req in names(df) || error("Missing required column: $(req)")
+    # dress-only rows (category contains "dress")
+    if :category in names(ds)
+        ds = ds[occursin.("dress", lowercase.(string.(ds.category))), :]
     end
 
-    df.brand    = normbrand.(df.brand)
-    df.category = normcategory.(df.category)
-    df.season   = lowercase.(strip.(string.(df.season)))
-    df.season   = replace.(df.season, "fall" => "autumn")
-
-    price_col = pick_price_col(df)
-    date_col  = pick_date_col(df)
-    prod_id   = pick_product_id(df)
-
-    # Keep the most recent entry per product as "current" if dates exist
-    if date_col !== nothing
-        try
-            df[!, date_col] = DateTime.(string.(df[!, date_col]))
-        catch
-            @warn "Could not parse date column $(date_col); falling back to lexical order."
-        end
-        if prod_id !== nothing
-            sort!(df, [prod_id, date_col])
-            df = unique(df, prod_id; keep = :last)
-        else
-            # overall latest date
-            if eltype(df[!, date_col]) <: Union{Missing,DateTime}
-                latest = maximum(skipmissing(df[!, date_col]))
-                df = df[df[!, date_col] .== latest, :]
-            else
-                latest = maximum(skipmissing(string.(df[!, date_col])))
-                df = df[string.(df[!, date_col]) .== latest, :]
-            end
-        end
+    # aggregate by brand over current_price
+    if nrow(ds) == 0
+        # no dress rows for this season; still list all brands with missing
+        brands = sort(unique(df_all.brand))
+        return DataFrame(brand = brands, avg_current_price_dress = Vector{Union{Missing,Float64}}(missing, length(brands)))
     end
 
-    return df, price_col
-end
+    g   = groupby(ds, :brand)
+    agg = combine(g, :current_price => fmean_current => :avg_current_price_dress)
 
-# --------- pivot for one season, enforcing ALL brands ---------
-function pivot_one_season_allbrands(df_all::DataFrame, df_season::DataFrame, price_col::Symbol; categories::Vector{String})
-    # aggregate by brand+category for the season subset
-    if nrow(df_season) == 0
-        wide = DataFrame(brand = unique(df_all.brand))
-        sort!(wide, :brand)
-        for c in categories
-            wide[!, Symbol(c)] = missing
-        end
-        return wide
-    end
-
-    g = groupby(df_season, [:brand, :category])
-    agg = combine(g, price_col => fmean => :avg_price)
-    wide = unstack(agg, :brand, :category, :avg_price)
-
-    # ensure chosen category columns exist
-    for c in categories
-        sc = Symbol(c)
-        if !(sc in names(wide))
-            wide[!, sc] = missing
-        end
-    end
-
-    # enforce ALL brands from the full dataset
+    # enforce ALL brands appear
     all_brands = sort(unique(df_all.brand))
-    wide = leftjoin(DataFrame(brand = all_brands), wide, on = :brand)
+    wide = leftjoin(DataFrame(brand = all_brands), agg, on = :brand)
 
-    # keep brand + chosen categories in order
-    select!(wide, vcat(:brand, Symbol.(categories)))
     return wide
 end
 
-# --------- build & save all tables (all brands listed) ---------
-function build_season_tables(path::AbstractString;
-        categories::Vector{String} = ["dress","pants","tops"],
-        seasons::Vector{String}    = ["summer","autumn","winter","spring"],
+# Build all season tables and optionally save CSVs
+function build_season_tables_dresses(path::AbstractString;
+        seasons::Vector{String} = ["summer","autumn","winter","spring"],
         save_csv::Bool = true,
-        outdir::AbstractString = "season_tables")
+        outdir::AbstractString = "season_tables_dresses")
 
-    df, price_col = load_and_normalize(path)
+    df = load_and_normalize(path)
     tables = Dict{String,DataFrame}()
 
     for s in seasons
-        ds = df[occursin.(s, df.season), :]
-        tbl = pivot_one_season_allbrands(df, ds, price_col; categories=categories)
+        tbl = table_one_season_dresses(df, s)
         tables[s] = tbl
 
         println("\n===== $(uppercase(s)) =====")
@@ -172,7 +129,7 @@ function build_season_tables(path::AbstractString;
     if save_csv
         isdir(outdir) || mkpath(outdir)
         for (s, tbl) in tables
-            CSV.write(joinpath(outdir, "avg_prices_$(s).csv"), tbl)
+            CSV.write(joinpath(outdir, "avg_current_price_dress_$(s).csv"), tbl)
         end
         println("\nSaved CSVs to: $(outdir)")
     end
@@ -180,12 +137,11 @@ function build_season_tables(path::AbstractString;
     return tables
 end
 
-# --------- run when executed ---------
+# Run when executed
 if abspath(PROGRAM_FILE) == @__FILE__
-    build_season_tables(csv_path;
-        categories = categories_to_show,
-        seasons    = seasons_to_show,
-        save_csv   = save_csv,
-        outdir     = outdir
+    build_season_tables_dresses(csv_path;
+        seasons = seasons_to_show,
+        save_csv = save_csv,
+        outdir = outdir
     )
 end
