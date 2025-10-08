@@ -12,32 +12,51 @@ For example, using the system, a user can easily compare the prices of jeans fro
 
 # Program Development
 
-The program is developed using a **modular coding strategy**, where each part of the code focuses on a specific task. This approach improves clarity and maintainability. When combined, the modules allow users to interact with the system and compare prices across **brands, categories, and seasons**.
+The program is developed using a modular coding strategy, where each part of the code is designed to perform a specific function. This modular approach enhances clarity, maintainability. When combined, the modules allow users to interact with the program and compare prices across different brands, categories, and seasons.
 
-## Step 1: Category Price Analysis
-The first module calculates the **average price for each product category**. This provides an overview of pricing trends across different types of products, without considering brands or seasons.
+The first part of our project focuses on building the foundation of the information system used to analyse fashion product prices across categories, brands, and seasons.
+The process begins with data review and cleaning, so that it contains only the variables relevant to the analysis: 
 
-## Step 2: Linking Categories to Brands
-The second module links the **average category prices to specific brands**. This allows comparisons between competitors within the same category, such as how Zara’s jeans compare in price to H&M’s jeans.
+- 6 categories (Outerwear, Tops, Accessories, Shoes, Bottoms, Dresses)  
+- 10 brands (Zara, Uniqlo, Banana Republic, Mango, H&M, Ann Taylor, Gap, Forever21)  
+- 4 seasons (Spring, Summer, Fall, Winter)  
 
-## Step 3: Incorporating Seasonal Dimensions
-The third module introduces **seasonality** into the analysis. By combining categories and brands with seasonal attributes, the program enables exploration of trends. For example:  
-- How outerwear prices increase during winter  
-- How summer clothing may be priced differently across brands  
+These lists guarantee that user interactions remain consistent and prevent processing errors caused by variations in text formatting or typos. 
 
-## Step 4: User Input Handling
-The program includes an **interactive module** that guides the user through three steps:  
-1. Select the product category of interest  
-2. Specify the season to analyze  
-3. Choose two brands for comparison  
+## Step 1: User Interface
 
-This structure ensures that user choices are captured efficiently, while keeping the comparison limited to two brands for clarity and easy interpretation.
+This initial phase focuses on direct interaction with the user. The program requires the user to provide three specific inputs:
 
-## Step 5: Error Management
-To enhance usability, the program includes **error handling** for invalid inputs. If a user requests a category or brand not contained in the dataset (e.g., "glasses"), the program displays an error message to indicate that the input is invalid. This prevents interruptions in execution and guides the user back toward valid choices.
+1. **Product category:** the user selects one of the six available options.  
+2. **Two brands to compare:** selected from the available brands.  
+3. **Season:** the user selects the desired season.  
 
-## Summary
-The program development process is built **step by step**: starting from category analysis, extending to brand and seasonal comparisons, and culminating in interactive input handling and error control. By adopting this strategy, the program is **user-friendly and reliable**, while also enabling future enhancements such as advanced analysis or visualizations.
+This step validates the inputs to ensure they are correct, that the two brands are different and that all inputs match the allowed variables exactly. If the input is invalid, the program asks the user to re-enter it.  
+
+This step ensures that the comparison is performed only on valid and consistent data. 
+
+## Step 2: Data Filtering
+
+After collecting and validating all user inputs, the program searches the dataset to keep only the rows that match user’s choices: 
+
+- **Product Category:** Items must belong to the selected category.  
+- **Season:** Items must correspond to the chosen season.  
+- **Brands:** Items must be sold by one of the two selected brands.  
+
+This process narrows the dataset to the products that user wants to compare. If no matching products are found (for instance, if one of the brands has no items in that category or season), the program informs the user that there is **no data available** for the requested analysis. 
+
+## Step 3: Average Price Analysis
+
+The program proceeds to calculate and present the average prices for comparison. In this stage, the program identifies the average prices of the products belonging to the selected brands. Moreover, the program associates the results with the selected season, allowing the analysis to take into account the seasonal context of the prices.
+
+If data exists only for one of the two brands within the chosen category and season, the program informs the users that **one of the selected brands has no available price data** for that specific comparison. 
+
+## Error Handling
+
+An important feature of the program is the implementation of **error handling and input validation**. For example, if the user types a brand name incorrectly, provides only one brand instead of two, or enters a season or category that does not exist in the system (e.g., “glasses”) the program displays an error message and asks the user to enter the information again.  
+
+This ensures that the calculations are performed only with valid and consistent data.
+
 
 ## License 
 
