@@ -10,8 +10,6 @@ With our project, **Dynamic Pricing Optimization for Retail Fashion**, we aim to
 
 For example, using the system, a user can easily compare the prices of jeans from Zara and H&M, or explore how outerwear prices change across different seasons.  
 
-For example, using the system, a user can easily compare the prices of jeans from Zara and H&M, or explore how outerwear prices change across different seasons.  
-
 # Program Development
 
 The program is developed using a **modular coding strategy**, where each part of the code focuses on a specific task. This approach improves clarity and maintainability. When combined, the modules allow users to interact with the system and compare prices across **brands, categories, and seasons**.
