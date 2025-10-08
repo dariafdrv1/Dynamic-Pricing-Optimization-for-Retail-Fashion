@@ -1,6 +1,8 @@
+import Pkg
+Pkg.add("Plots")
 using CSV, DataFrames, Statistics, Plots
 
-const CSV_PATH = "/Users/dfedorova/github/DashasCode/fashion_boutique_dataset.csv"
+const CSV_PATH = "D:\\2_Study\\2_Study Abroad\\Master_PhD Scholarships\\Master Scholarship\\KLU\\Courses\\Scientific Programming\\Git_clone_Retail_Fashion_Boutique\\Dynamic-Pricing-Optimization-for-Retail-Fashion\\DashasCode\\fashion_boutique_dataset11.csv"
 
 # --- Load ---
 df = CSV.read(CSV_PATH, DataFrame)
