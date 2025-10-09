@@ -92,6 +92,29 @@ This visualization enables users, retailers, and analysts to:
 
 If no data is available for the selected combination (for example, if a certain category is not sold by any brand in that season), the program communicates this clearly and terminates.
 
+## Part 3: Interactive Exploration (Looped Visualization)
+
+The third part of the program expands the analysis by allowing users to **continuously explore price patterns** across all brands, categories, and seasons in a single interactive session. Unlike the previous modules, which focus on one-time comparisons, this step introduces a **looped visualization system** that lets users generate multiple analyses without restarting the program.
+
+Once the dataset is loaded and validated, the program automatically identifies all available categories and seasons directly from the data. This ensures that the user is always selecting from accurate, up-to-date options and prevents input errors such as typos or unavailable entries.
+
+After the user selects a category and a season, the program filters the dataset to display only the products that match those criteria. It then calculates the average current price for each brand, skipping any missing values to maintain reliable results.
+
+The filtered data is presented visually through a **bar chart**, where:
+
+- The **x-axis** represents the different brands.
+
+- The **y-axis** displays the average current price.
+
+- Each bar is labeled with the brand name and annotated with the corresponding average price value.
+
+- The chart title clearly indicates the selected category and season.
+
+If there is no data available for the chosen combination, the program informs the user and returns to the selection phase without errors or interruptions.
+
+After each visualization, the user is asked whether they would like to analyze another category or season. By confirming, the user can immediately repeat the process with new selections, enabling smooth and continuous exploration of pricing trends across the entire dataset. If the user chooses to exit, the program ends.
+
+This step enhances user interaction by combining automated data filtering, statistical summarization, and dynamic visualization in one continuous loop. It allows both consumers and analysts to easily observe how brand pricing strategies differ across various market conditions and seasonal contexts.
 
 ## License 
 
