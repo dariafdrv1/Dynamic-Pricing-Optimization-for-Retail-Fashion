@@ -69,15 +69,15 @@ Once the user inputs their selections, the program automatically filters the dat
 
 For each brand present in the filtered dataset, the program calculates:
 
-**Average current price**: the mean value of all product prices for that brand.
+- **Average current price**: the mean value of all product prices for that brand.
 
-**Minimum and maximum prices**: representing the brand’s overall price range within the selected category and season.
+- **Minimum and maximum prices**: representing the brand’s overall price range within the selected category and season.
 
 These aggregated results are then displayed in the console, showing:
 
-The mean and median prices across all brands (for the entire slice).
+- The mean and median prices across all brands (for the entire slice).
 
-A detailed table listing each brand’s average, minimum, and maximum price.
+- A detailed table listing each brand’s average, minimum, and maximum price.
 
 After computing these statistics, the user is asked whether they would like to see the price range between brands visually.
 If confirmed, the program produces a **bar chart** illustrating the average prices per brand, optionally adjusted to reflect the full price range (from the minimum to maximum value). Each bar is labeled with the corresponding brand name and annotated with its average price value, providing a clear and immediate visual comparison between brands.
@@ -90,7 +90,7 @@ This visualization enables users, retailers, and analysts to:
 
 - Understand competitive dynamics in the fashion market at a glance.
 
-If no data is available for the selected combination (for example, if a certain category is not sold by any brand in that season), the program communicates this clearly and terminates gracefully.
+If no data is available for the selected combination (for example, if a certain category is not sold by any brand in that season), the program communicates this clearly and terminates.
 
 
 ## License 
