@@ -14,7 +14,7 @@ For example, using the system, a user can easily compare the prices of jeans fro
 
 The program is developed using a modular coding strategy, where each part of the code is designed to perform a specific function. This modular approach enhances clarity, maintainability. When combined, the modules allow users to interact with the program and compare prices across different brands, categories, and seasons.
 
-The first part of our project focuses on building the foundation of the information system used to analyse fashion product prices across categories, brands, and seasons.
+The first part of our program focuses on building the foundation of the information system used to analyse fashion product prices across categories, brands, and seasons.
 The process begins with data review and cleaning, so that it contains only the variables relevant to the analysis: 
 
 - 6 categories (Outerwear, Tops, Accessories, Shoes, Bottoms, Dresses)  
@@ -22,6 +22,10 @@ The process begins with data review and cleaning, so that it contains only the v
 - 4 seasons (Spring, Summer, Fall, Winter)  
 
 These lists guarantee that user interactions remain consistent and prevent processing errors caused by variations in text formatting or typos. 
+
+# Part 1: Brand Comparison Program
+
+This part of the project introduces the first interactive module, which allows users to compare the prices between **two selected fashion brands** within a specific **category** and **season**. It forms the foundation of the analysis system by combining user input validation, data filtering, and statistical comparison.
 
 ## Step 1: User Interface
 
@@ -56,6 +60,37 @@ If data exists only for one of the two brands within the chosen category and sea
 An important feature of the program is the implementation of **error handling and input validation**. For example, if the user types a brand name incorrectly, provides only one brand instead of two, or enters a season or category that does not exist in the system (e.g., “glasses”) the program displays an error message and asks the user to enter the information again.  
 
 This ensures that the calculations are performed only with valid and consistent data.
+
+## Part 2: Data Visualization and Price Distribution Analysis
+
+After the user has selected a specific **category** and **season**, this step focuses on analyzing and visualizing how prices vary across different brands within that selection. Unlike the first program, which compares only two brands, this step provides an overview of **all brands** available in the chosen category and season.
+
+Once the user inputs their selections, the program automatically filters the dataset to include only the rows that match those choices. This ensures that the following analysis and visualizations are based on the most relevant and accurate data subset.
+
+For each brand present in the filtered dataset, the program calculates:
+
+**Average current price**: the mean value of all product prices for that brand.
+
+**Minimum and maximum prices**: representing the brand’s overall price range within the selected category and season.
+
+These aggregated results are then displayed in the console, showing:
+
+The mean and median prices across all brands (for the entire slice).
+
+A detailed table listing each brand’s average, minimum, and maximum price.
+
+After computing these statistics, the user is asked whether they would like to see the price range between brands visually.
+If confirmed, the program produces a **bar chart** illustrating the average prices per brand, optionally adjusted to reflect the full price range (from the minimum to maximum value). Each bar is labeled with the corresponding brand name and annotated with its average price value, providing a clear and immediate visual comparison between brands.
+
+This visualization enables users, retailers, and analysts to:
+
+Identify which brands position themselves at the higher or lower end of the pricing spectrum.
+
+Observe pricing trends within a given season and category.
+
+Understand competitive dynamics in the fashion market at a glance.
+
+If no data is available for the selected combination (for example, if a certain category is not sold by any brand in that season), the program communicates this clearly and terminates gracefully.
 
 
 ## License 
