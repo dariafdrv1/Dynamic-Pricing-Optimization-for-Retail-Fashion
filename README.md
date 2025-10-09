@@ -84,11 +84,11 @@ If confirmed, the program produces a **bar chart** illustrating the average pric
 
 This visualization enables users, retailers, and analysts to:
 
-Identify which brands position themselves at the higher or lower end of the pricing spectrum.
+- Identify which brands position themselves at the higher or lower end of the pricing spectrum.
 
-Observe pricing trends within a given season and category.
+- Observe pricing trends within a given season and category.
 
-Understand competitive dynamics in the fashion market at a glance.
+- Understand competitive dynamics in the fashion market at a glance.
 
 If no data is available for the selected combination (for example, if a certain category is not sold by any brand in that season), the program communicates this clearly and terminates gracefully.
 
