@@ -6,7 +6,7 @@ Pkg.add("CSV")
 using DataFrames
 using CSV
 
-filepath = "D:\\2_Study\\2_Study Abroad\\Master_PhD Scholarships\\Master Scholarship\\KLU\\Courses\\Scientific Programming\\fashion_boutique_dataset.csv"
+filepath = "insert your own path\\fashion_boutique_dataset.csv"
 
 df = CSV.read(filepath, DataFrame)
 println(first(df, 5))
