@@ -1,16 +1,9 @@
-###############################################################
-# runtest.jl — simple smoke tests for beginner users
-#
 # This script performs a few non-invasive checks:
 #  - dataset file exists and has the required columns
 #  - the two script files exist
 #  - basic, static checks inside each script (looks for expected
 #    function names / keywords) so we don't execute interactive
 #    code during tests.
-#
-# Run with:
-#   julia --project runtest.jl
-###############################################################
 
 using CSV, DataFrames
 
