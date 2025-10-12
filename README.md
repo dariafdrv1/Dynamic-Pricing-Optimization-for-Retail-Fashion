@@ -8,7 +8,7 @@ To address these challenges, our project introduces a program designed to analyz
 
 The main goal of this project is to develop a program that provides meaningful market insights into pricing strategies. By simplifying and structuring fashion retail data, the program enables users, from consumers to brand managers, to make informed decisions. For instance, a consumer can compare the prices of jeans from Zara and H&M to find the best deal, while a retailer can use the same insights to benchmark its pricing performance against competitors and adapt its strategy accordingly.  
 
-With our project, **Dynamic Pricing Optimization for Retail Fashion**, we aim to simplify a detailed dataset, *fashion_boutique_dataset*, which contains 14 variables: product ID, category, brand, season, size, color, original price, markdown percentage, current price, purchase date, stock quantity, customer rating, return status, and return reason. From this dataset, we focus only on five variables: category, brand, season, and current price. These variables allow direct comparisons of products, brands, and pricing over time, forming the foundation for both customer-facing and business-oriented analysis.  
+With our project, **Dynamic Pricing Optimization for Retail Fashion**, we aim to simplify a detailed dataset, *fashion_boutique_dataset*, which contains 14 variables: product ID, category, brand, season, size, color, original price, markdown percentage, current price, purchase date, stock quantity, customer rating, return status, and return reason. From this dataset, we focus only on four variables: category, brand, season, and current price. These variables allow direct comparisons of products, brands, and pricing over time, forming the foundation for both customer-facing and business-oriented analysis.  
 
 # Program Development
 
@@ -51,10 +51,8 @@ This process narrows the dataset to the products that user wants to compare. If 
 
 ## Step 3: Average Price Analysis
 
-The program proceeds to calculate and present the average prices for comparison. In this stage, the program identifies the average prices of the products belonging to the selected brands. Moreover, the program associates the results with the selected season, allowing the analysis to take into account the seasonal context of the prices.
-
-If data exists only for one of the two brands within the chosen category and season, the program informs the users that **one of the selected brands has no available price data** for that specific comparison. 
-
+The program proceeds to calculate and present the average prices for comparison. In this stage, the program identifies the average current prices of the products belonging to the selected brands. Moreover, the program associates the results with the selected season, allowing the analysis to take into account the seasonal context of the prices.
+ 
 ## Error Handling
 
 An important feature of the program is the implementation of **error handling and input validation**. For example, if the user types a brand name incorrectly, provides only one brand instead of two, or enters a season or category that does not exist in the system (e.g., “glasses”) the program displays an error message and asks the user to enter the information again.  
