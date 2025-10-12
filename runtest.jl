@@ -69,7 +69,7 @@ function run_tests()
         fail("step2_avg_price_by_brand.jl missing safe_slug or current_price references")
     end
 
-    println("\nAll smoke checks passed. You can run the scripts interactively as described in their headers.")
+    println("\nAll checks passed.")
     exit(0)
 end
 
