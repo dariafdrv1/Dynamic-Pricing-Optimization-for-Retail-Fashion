@@ -15,7 +15,7 @@ function ok(msg)
 end
 
 function run_tests()
-    println("Running simple smoke tests...\n")
+    println("Running simple tests...\n")
 
     # 1) CSV exists
     isfile(csvpath) || fail("CSV not found at: $csvpath")
