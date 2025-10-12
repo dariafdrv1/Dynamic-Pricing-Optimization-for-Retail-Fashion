@@ -1,10 +1,3 @@
-# This script performs a few non-invasive checks:
-#  - dataset file exists and has the required columns
-#  - the two script files exist
-#  - basic, static checks inside each script (looks for expected
-#    function names / keywords) so we don't execute interactive
-#    code during tests.
-
 using CSV, DataFrames
 
 root = @__DIR__
