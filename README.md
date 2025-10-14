@@ -23,23 +23,7 @@ The process begins with data review and cleaning, so that it contains only the v
 
 These lists guarantee that user interactions remain consistent and prevent processing errors caused by variations in text formatting or typos. 
 
-# Setup
-
-Install the required Julia packages once:
-- CSV.jl – for reading and writing CSV files
-- DataFrames.jl – for working with tabular data
-- Statistics.jl – for basic statistical operations
-- GLM.jl – for linear regression and elasticity estimation
-- StatsModels.jl – for regression formula handling
-- Plots.jl – for data visualization
-
-# Part 1: Brand Comparison Program
-
-This part presents the first interactive module of the project, implemented as a menu-based program that enables users to compare the prices of two fashion brands within a selected category and season. The program begins by displaying menus from which the user selects a product category and season. Based on these choices, the system automatically filters the dataset to show only the brands available within the selected parameters. The user can then choose two different brands to compare. Once the selections are made, the program calculates the average current price for each brand, displays the results in a comparison table, and highlights the price difference between them. If the selected category and season contain no data or fewer than two brands, the program notifies the user and allows them to make another selection. This interactive process can be repeated multiple times, allowing users to explore and compare brand pricing patterns across various categories and seasons.
-
-## Step 1: User Interface
-
-The user interface is designed to provide a simple and intuitive experience through a series of menus. The program guides the user step-by-step to make the necessary selections:
+The program is designed to provide a simple and intuitive UX/UI experience through a series of menus. The program guides the user step-by-step to make the necessary selections:
 
 - **Category selection** the user chooses a product category from the available options.
 
@@ -58,6 +42,21 @@ After collecting and validating all user inputs, the program searches the datase
 - **Brands:** Items must be sold by one of the two selected brands.  
 
 This process narrows the dataset to the products that user wants to compare. If no matching products are found (for instance, if one of the brands has no items in that category or season), the program informs the user that there is **no data available** for the requested analysis. 
+
+# Setup
+
+Install the required Julia packages once:
+- CSV.jl – for reading and writing CSV files
+- DataFrames.jl – for working with tabular data
+- Statistics.jl – for basic statistical operations
+- GLM.jl – for linear regression and elasticity estimation
+- StatsModels.jl – for regression formula handling
+- Plots.jl – for data visualization
+
+# Part 1: Brand Comparison Program
+
+This part presents the first interactive module of the project, implemented as a menu-based program that enables users to compare the prices of two fashion brands within a selected category and season. The program begins by displaying menus from which the user selects a product category and season. Based on these choices, the system automatically filters the dataset to show only the brands available within the selected parameters. The user can then choose two different brands to compare. Once the selections are made, the program calculates the average current price for each brand, displays the results in a comparison table, and highlights the price difference between them. If the selected category and season contain no data or fewer than two brands, the program notifies the user and allows them to make another selection. This interactive process can be repeated multiple times, allowing users to explore and compare brand pricing patterns across various categories and seasons.
+
 
 ## Step 3: Average Price Analysis
 
