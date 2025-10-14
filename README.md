@@ -23,6 +23,15 @@ The process begins with data review and cleaning, so that it contains only the v
 
 These lists guarantee that user interactions remain consistent and prevent processing errors caused by variations in text formatting or typos. 
 
+# Setup
+
+Install the required Julia packages once:
+
+In Terminal: 
+```bash
+julia --project -e 'using Pkg; Pkg.add(["CSV","DataFrames","Statistics","GLM","StatsModels","Plots"]); Pkg.precompile()'
+
+
 # Part 1: Brand Comparison Program
 
 This part presents the first interactive module of the project, implemented as a menu-based program that enables users to compare the prices of two fashion brands within a selected category and season. The program begins by displaying menus from which the user selects a product category and season. Based on these choices, the system automatically filters the dataset to show only the brands available within the selected parameters. The user can then choose two different brands to compare. Once the selections are made, the program calculates the average current price for each brand, displays the results in a comparison table, and highlights the price difference between them. If the selected category and season contain no data or fewer than two brands, the program notifies the user and allows them to make another selection. This interactive process can be repeated multiple times, allowing users to explore and compare brand pricing patterns across various categories and seasons.
