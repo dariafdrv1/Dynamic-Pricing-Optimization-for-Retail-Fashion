@@ -26,11 +26,12 @@ These lists guarantee that user interactions remain consistent and prevent proce
 # Setup
 
 Install the required Julia packages once:
-
-In Terminal: 
-```bash
-#julia --project -e 'using Pkg; Pkg.add(["CSV","DataFrames","Statistics","GLM","StatsModels","Plots"]); Pkg.precompile()'
-
+	•	CSV.jl – for reading and writing CSV files
+	•	DataFrames.jl – for working with tabular data
+	•	Statistics.jl – for basic statistical operations
+	•	GLM.jl – for linear regression and elasticity estimation
+	•	StatsModels.jl – for regression formula handling
+	•	Plots.jl – for data visualization
 
 # Part 1: Brand Comparison Program
 
