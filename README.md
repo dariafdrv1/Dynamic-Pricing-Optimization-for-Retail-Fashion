@@ -29,7 +29,7 @@ Install the required Julia packages once:
 
 In Terminal: 
 ```bash
-julia --project -e 'using Pkg; Pkg.add(["CSV","DataFrames","Statistics","GLM","StatsModels","Plots"]); Pkg.precompile()'
+#julia --project -e 'using Pkg; Pkg.add(["CSV","DataFrames","Statistics","GLM","StatsModels","Plots"]); Pkg.precompile()'
 
 
 # Part 1: Brand Comparison Program
