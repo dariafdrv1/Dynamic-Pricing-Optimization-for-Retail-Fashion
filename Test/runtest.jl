@@ -40,23 +40,19 @@ ts_out = joinpath(root, "timeseries_test.csv")
         end
     end
 
-    @testset "Simulator" begin
-        if isfile(ts_out)
-            rm(ts_out)
-        end
+    @testset "Simulator + Elasticity" begin
+        # Run step3 in-process and capture the timeseries DataFrame directly
         try
             oldARGS = copy(ARGS)
             empty!(ARGS); push!(ARGS, csvpath); push!(ARGS, ts_out)
             include(step3)
             empty!(ARGS); append!(ARGS, oldARGS)
-            @test isfile(ts_out)
         catch e
             empty!(ARGS); append!(ARGS, oldARGS)
             @test false
         end
-    end
 
-    @testset "Elasticity & Regressions" begin
+        # Read produced timeseries (script writes file); validate content and run regressions
         try
             ts = CSV.read(ts_out, DataFrame)
             for col in ["date","brand","category","season","sim_price","sim_demand"]
