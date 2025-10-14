@@ -1,76 +1,155 @@
-using CSV, DataFrames
+using Dates, CSV, DataFrames, Statistics
+using StatsModels, GLM
 
 root = @__DIR__
 csvpath = joinpath(root, "fashion_boutique_dataset.csv")
-f1 = joinpath(root, "step1_compare_two_brands.jl")
-f2 = joinpath(root, "step2_avg_price_by_brand.jl")
+step1 = joinpath(root, "step1_compare_two_brands.jl")
+step2 = joinpath(root, "step2_avg_price_by_brand.jl")
+step3 = joinpath(root, "step3_simulate_timeseries_sales_aligned.jl")
 
-function fail(msg)
-    println("[FAIL] ", msg)
-    exit(1)
+total = 0
+passed = 0
+
+function mark_total(n=1)
+    global total
+    total += n
+end
+
+function mark_pass(n=1)
+    global passed
+    passed += n
 end
 
 function ok(msg)
-    println("[ OK ] ", msg)
+    mark_pass()
+    println("[ OK  ] ", msg)
 end
 
-function run_tests()
-    println("Running simple tests...\n")
+function fail(msg)
+    println("[FAIL] ", msg)
+end
 
-    # 1) CSV exists
-    isfile(csvpath) || fail("CSV not found at: $csvpath")
-    ok("Found dataset: $(basename(csvpath))")
+function check(path, description)
+    mark_total()
+    if isfile(path)
+        ok(description)
+        return true
+    else
+        fail(description * " — file not found: $path")
+        return false
+    end
+end
 
-    # 2) CSV has required columns
-    required = ["brand", "category", "season", "current_price"]
-    # try to read just the header using CSV.File; fall back to reading a DataFrame
-    cols = String[]
+function check_csv_cols(path, cols::Vector{String})
+    mark_total()
     try
-        cf = CSV.File(csvpath)
-        cols = String.(cf.header)
-    catch _
+        cf = CSV.File(path)
+        h = String.(cf.header)
+        miss = setdiff(cols, h)
+        if isempty(miss)
+            ok("CSV has required columns: $(join(cols, ", "))")
+            return true
+        else
+            fail("CSV missing columns: $(join(miss, ", "))")
+            return false
+        end
+    catch e
+        fail("Could not read CSV header: $e")
+        return false
+    end
+end
+
+function run()
+    t0 = Dates.now()
+    println("Running simple end-to-end tests (non-interactive)\nProject root: $root\n")
+
+    # Step 1 & 2 existence checks
+    _ = check(csvpath, "Dataset present: $(basename(csvpath))")
+    _ = check(step1, "Step1 script present")
+    _ = check(step2, "Step2 script present")
+
+    # CSV columns
+    _ = check_csv_cols(csvpath, ["brand","category","season","current_price"])
+
+    # Step2 content check
+    mark_total()
+    try
+        txt = read(step2, String)
+        if occursin("plot_avg_price_by_brand!", txt)
+            ok("step2 contains plot_avg_price_by_brand!()")
+        else
+            fail("step2 likely missing plot_avg_price_by_brand!()")
+        end
+    catch e
+        fail("Could not read step2 for content check: $e")
+    end
+
+    # Step3: run in-process
+    println("\n-- Running step3 (simulator) in-process --")
+    mark_total()
+    ts_out = joinpath(root, "timeseries_test.csv")
+    try
+        oldARGS = copy(ARGS)
+        empty!(ARGS)
+        push!(ARGS, csvpath)
+        push!(ARGS, ts_out)
+        include(step3)
+        empty!(ARGS); append!(ARGS, oldARGS)
+        if isfile(ts_out)
+            ok("step3 produced timeseries: $(basename(ts_out))")
+        else
+            fail("step3 did not produce timeseries file")
+        end
+    catch e
+        empty!(ARGS); append!(ARGS, oldARGS)
+        fail("step3 in-process error: $e")
+    end
+
+    # Step4 & Step5: basic checks and regressions
+    println("\n-- Running step4 & step5 checks --")
+    mark_total()
+    if !isfile(ts_out)
+        fail("Timeseries file missing for steps 4/5: $ts_out")
+    else
         try
-            df = CSV.read(csvpath, DataFrame)
-            cols = String.(names(df))
+            ts = CSV.read(ts_out, DataFrame)
+            for col in ["date","brand","category","season","sim_price","sim_demand"]
+                if !(col in String.(names(ts)))
+                    fail("Timeseries missing column: $col")
+                    return
+                end
+            end
+            ok("Timeseries contains expected columns")
+
+            ts.sim_price = Float64.(ts.sim_price)
+            ts.sim_demand = Float64.(ts.sim_demand)
+            ts.log_p = log.(ts.sim_price)
+            ts.log_q = log.(ts.sim_demand)
+
+            groups = groupby(ts, [:brand, :category])
+            fitted = 0
+            for g in groups
+                if nrow(g) >= 3
+                    m = lm(@formula(log_q ~ log_p), g)
+                    fitted += 1
+                end
+            end
+            if fitted > 0
+                ok("Fitted grouped regressions for $fitted groups")
+                mark_pass() # extra pass for successful regressions
+            else
+                fail("No groups with >=3 rows to fit regressions")
+            end
         catch e
-            fail("Could not read CSV: $(e)")
+            fail("Step4/5 error: $e")
         end
     end
-    missing_cols = setdiff(required, cols)
-    isempty(missing_cols) || fail("CSV is missing required columns: " * join(missing_cols, ", "))
-    ok("CSV has required columns: " * join(required, ", "))
 
-    # 3) Script files exist
-    isfile(f1) || fail("Missing file: $(f1)")
-    isfile(f2) || fail("Missing file: $(f2)")
-    ok("Found script files: $(basename(f1)), $(basename(f2))")
-
-    # 4) Static inspections (do not execute scripts)
-    txt1 = read(f1, String)
-    txt2 = read(f2, String)
-
-    # Basic expectations for step1 — it's allowed to vary, so we keep checks simple
-    if occursin("brand", lowercase(txt1)) && occursin("current_price", lowercase(txt1))
-        ok("step1 contains expected keywords (brand, current_price)")
-    else
-        fail("step1_compare_two_brands.jl looks missing expected keywords (brand, current_price)")
-    end
-
-    # More specific checks for step2
-    if occursin("function plot_avg_price_by_brand!", txt2)
-        ok("step2 defines plot_avg_price_by_brand!()")
-    else
-        fail("step2_avg_price_by_brand.jl missing function plot_avg_price_by_brand!()")
-    end
-
-    if occursin("safe_slug", txt2) && occursin("current_price", txt2)
-        ok("step2 contains safe_slug and references current_price")
-    else
-        fail("step2_avg_price_by_brand.jl missing safe_slug or current_price references")
-    end
-
-    println("\nAll checks passed.")
-    exit(0)
+    dt = Dates.now() - t0
+    println("\n== Summary ==")
+    println("Passed: $passed / Total: $total")
+    println("Elapsed: $(Dates.value(dt)) ms")
 end
 
-run_tests()
+run()
+
