@@ -25,19 +25,19 @@ These lists guarantee that user interactions remain consistent and prevent proce
 
 # Part 1: Brand Comparison Program
 
-This part of the project introduces the first interactive module, implemented as a menu-based Julia program, which allows users to compare the prices between **two selected fashion brands** within a specific **category** and **season**. It forms the foundation of the analysis system by combining user input validation, data filtering, and statistical comparison.
+This part presents the first interactive module of the project, implemented as a menu-based program that enables users to compare the prices of two fashion brands within a selected category and season. The program begins by displaying menus from which the user selects a product category and season. Based on these choices, the system automatically filters the dataset to show only the brands available within the selected parameters. The user can then choose two different brands to compare. Once the selections are made, the program calculates the average current price for each brand, displays the results in a comparison table, and highlights the price difference between them. If the selected category and season contain no data or fewer than two brands, the program notifies the user and allows them to make another selection. This interactive process can be repeated multiple times, allowing users to explore and compare brand pricing patterns across various categories and seasons.
 
 ## Step 1: User Interface
 
-This initial phase focuses on direct interaction with the user. The program requires the user to provide three specific inputs:
+The user interface is designed to provide a simple and intuitive experience through a series of menus. The program guides the user step-by-step to make the necessary selections:
 
-1. **Product category:** the user selects one of the six available options.  
-2. **Two brands to compare:** selected from the available brands.  
-3. **Season:** the user selects the desired season.  
+Category selection – the user chooses a product category from the available options.
 
-This step validates the inputs to ensure they are correct, that the two brands are different and that all inputs match the allowed variables exactly. If the input is invalid, the program asks the user to re-enter it.  
+Season selection – the user selects a season to analyze.
 
-This step ensures that the comparison is performed only on valid and consistent data. 
+Brand selection – the user selects two different brands to compare from those available in the chosen category and season.
+
+After the selections are made, the program validates the inputs to ensure that the chosen values exist in the dataset and that two distinct brands have been selected. If any input is invalid or unavailable, an error message is displayed, prompting the user to try again. Once the inputs are confirmed, the program performs the price comparison and displays the results clearly on the screen.
 
 ## Step 2: Data Filtering
 
