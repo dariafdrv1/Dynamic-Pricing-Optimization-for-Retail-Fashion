@@ -25,7 +25,7 @@ These lists guarantee that user interactions remain consistent and prevent proce
 
 # Part 1: Brand Comparison Program
 
-This part of the project introduces the first interactive module, which allows users to compare the prices between **two selected fashion brands** within a specific **category** and **season**. It forms the foundation of the analysis system by combining user input validation, data filtering, and statistical comparison.
+This part of the project introduces the first interactive module, implemented as a menu-based Julia program, which allows users to compare the prices between **two selected fashion brands** within a specific **category** and **season**. It forms the foundation of the analysis system by combining user input validation, data filtering, and statistical comparison.
 
 ## Step 1: User Interface
 
