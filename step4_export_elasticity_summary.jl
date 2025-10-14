@@ -1,4 +1,4 @@
-#to export elasticity summary
+# step4 to export elasticity summary
 using CSV, DataFrames, GLM, StatsModels
 ts = CSV.read("/Users/marcelasantos/Desktop/Project/timeseries_sales.csv", DataFrame)
 ts.log_p = log.(ts.sim_price); ts.log_q = log.(ts.sim_demand)
