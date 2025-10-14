@@ -23,6 +23,7 @@ The process begins with data review and cleaning, so that it contains only the v
 
 These lists guarantee that user interactions remain consistent and prevent processing errors caused by variations in text formatting or typos. 
 
+## User Interface
 The program is designed to provide a simple and intuitive UX/UI experience through a series of menus. The program guides the user step-by-step to make the necessary selections:
 
 - **Category selection** the user chooses a product category from the available options.
@@ -33,7 +34,7 @@ The program is designed to provide a simple and intuitive UX/UI experience throu
 
 After the selections are made, the program validates the inputs to ensure that the chosen values exist in the dataset and that two distinct brands have been selected. If any input is invalid or unavailable, an error message is displayed, prompting the user to try again. Once the inputs are confirmed, the program performs the price comparison and displays the results clearly on the screen.
 
-## Step 2: Data Filtering
+## Data Filtering
 
 After collecting and validating all user inputs, the program searches the dataset to keep only the rows that match user’s choices: 
 
@@ -41,7 +42,13 @@ After collecting and validating all user inputs, the program searches the datase
 - **Season:** Items must correspond to the chosen season.  
 - **Brands:** Items must be sold by one of the two selected brands.  
 
-This process narrows the dataset to the products that user wants to compare. If no matching products are found (for instance, if one of the brands has no items in that category or season), the program informs the user that there is **no data available** for the requested analysis. 
+This process narrows the dataset to the products that user wants to compare. If no matching products are found (for instance, if one of the brands has no items in that category or season), the program informs the user that there is **no data available** for the requested analysis.
+
+## Error Handling
+
+An important feature of the program is the implementation of **error handling and input validation**. For example, if the user types a brand name incorrectly, provides only one brand instead of two, or enters a season or category that does not exist in the system (e.g., “glasses”) the program displays an error message and asks the user to enter the information again.  
+
+This ensures that the calculations are performed only with valid and consistent data.
 
 # Setup
 
@@ -53,21 +60,19 @@ Install the required Julia packages once:
 - StatsModels.jl – for regression formula handling
 - Plots.jl – for data visualization
 
-# Part 1: Brand Comparison Program
+# Step 1: Brand Comparison Program
 
 This part presents the first interactive module of the project, implemented as a menu-based program that enables users to compare the prices of two fashion brands within a selected category and season. The program begins by displaying menus from which the user selects a product category and season. Based on these choices, the system automatically filters the dataset to show only the brands available within the selected parameters. The user can then choose two different brands to compare. Once the selections are made, the program calculates the average current price for each brand, displays the results in a comparison table, and highlights the price difference between them. If the selected category and season contain no data or fewer than two brands, the program notifies the user and allows them to make another selection. This interactive process can be repeated multiple times, allowing users to explore and compare brand pricing patterns across various categories and seasons.
 
+## How To Run
+1. Download raw code step1_compare_two_brands
+2. Run in you terminal with your own path: julia --project step1_compare_two_brands.jl "fashion_boutique_dataset.csv"
+3. It produces output
 
-## Step 3: Average Price Analysis
+# Step 2: Average Price Analysis
 
 The program proceeds to calculate and present the average prices for comparison. In this stage, the program identifies the average current prices of the products belonging to the selected brands. Moreover, the program associates the results with the selected season, allowing the analysis to take into account the seasonal context of the prices.
  
-## Error Handling
-
-An important feature of the program is the implementation of **error handling and input validation**. For example, if the user types a brand name incorrectly, provides only one brand instead of two, or enters a season or category that does not exist in the system (e.g., “glasses”) the program displays an error message and asks the user to enter the information again.  
-
-This ensures that the calculations are performed only with valid and consistent data.
-
 ## Part 2: Data Visualization and Price Distribution Analysis
 
 This part of the project introduces the second module, implemented as a **menu-based program** that allows users to analyze and visualize how prices vary across all brands within a selected category and season. Unlike the first module, which focuses on comparing only two brands, this step provides a broader market overview by displaying price distributions for all available brands in the chosen segment.
