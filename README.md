@@ -61,35 +61,15 @@ This ensures that the calculations are performed only with valid and consistent 
 
 ## Part 2: Data Visualization and Price Distribution Analysis
 
-After the user has selected a specific **category** and **season**, this step focuses on analyzing and visualizing how prices vary across different brands within that selection. Unlike the first program, which compares only two brands, this step provides an overview of **all brands** available in the chosen category and season.
+This part of the project introduces the second module, implemented as a **menu-based program** that allows users to analyze and visualize how prices vary across all brands within a selected category and season. Unlike the first module, which focuses on comparing only two brands, this step provides a broader market overview by displaying price distributions for all available brands in the chosen segment.
 
-Once the user inputs their selections, the program automatically filters the dataset to include only the rows that match those choices. This ensures that the following analysis and visualizations are based on the most relevant and accurate data subset.
+After the user selects a category and season from the menus, the program automatically filters the dataset to include only the rows that match those choices. If no data exists for the selected combination, or if there is only one brand in that category and season, the program notifies the user and allows them to make another selection.
 
-For each brand present in the filtered dataset, the program calculates:
+For the valid selection, the program performs a **summary analysis** that calculates the total number of products, the **mean** and **median current prices**, and the **average price per brand**. The results are displayed directly in the console, giving the user an overview of pricing patterns within the chosen slice of data.
 
-- **Average current price**: the mean value of all product prices for that brand.
+To enhance interpretability, the program also generates a **bar chart** illustrating the average current price for each brand. Each bar is labeled with the brand name and annotated with the corresponding price value, providing a clear and immediate visual comparison between brands. Users can choose whether they would like to save each chart as a PNG file for later reference.
 
-- **Minimum and maximum prices**: representing the brand’s overall price range within the selected category and season.
-
-These aggregated results are then displayed in the console, showing:
-
-- The mean and median prices across all brands (for the entire slice).
-
-- A detailed table listing each brand’s average, minimum, and maximum price.
-
-After computing these statistics, the user is asked whether they would like to see the price range between brands visually.
-If confirmed, the program produces a **bar chart** illustrating the average prices per brand, optionally adjusted to reflect the full price range (from the minimum to maximum value). Each bar is labeled with the corresponding brand name and annotated with its average price value, providing a clear and immediate visual comparison between brands.
-
-This visualization enables users, retailers, and analysts to:
-
-- Identify which brands position themselves at the higher or lower end of the pricing spectrum.
-
-- Observe pricing trends within a given season and category.
-
-- Understand competitive dynamics in the fashion market at a glance.
-
-If no data is available for the selected combination (for example, if a certain category is not sold by any brand in that season), the program communicates this clearly and terminates.
-
+Once the visualization is complete, the program asks whether the user would like to analyze another category or season. If confirmed, the process repeats, allowing continuous exploration of price trends across the dataset. This interactive looping design enables users, retailers, and analysts to gain deeper insights into how brand pricing strategies vary across categories and seasonal contexts, supporting both consumer decision-making and competitive benchmarking.
 ## Part 3: Interactive Exploration (Looped Visualization)
 
 The third part of the program expands the analysis by allowing users to **continuously explore price patterns** across all brands, categories, and seasons in a single interactive session. Unlike the previous modules, which focus on one-time comparisons, this step introduces a **looped visualization system** that lets users generate multiple analyses without restarting the program.
