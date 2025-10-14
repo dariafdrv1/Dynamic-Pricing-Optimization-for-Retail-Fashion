@@ -1,8 +1,9 @@
-# simulate_timeseries_sales_aligned.jl
+# step3_simulate_timeseries_sales_aligned.jl
 # Uses: /Users/marcelasantos/Desktop/Project/fashion_boutique_dataset.csv
 
 using CSV, DataFrames, Dates, Random, Statistics
 
+#update with your own file/path
 const CSV_PATH = "/Users/marcelasantos/Desktop/Project/fashion_boutique_dataset.csv"
 
 # Inputs (CLI overrides CSV_PATH)
