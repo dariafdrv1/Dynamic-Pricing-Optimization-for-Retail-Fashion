@@ -31,11 +31,11 @@ This part presents the first interactive module of the project, implemented as a
 
 The user interface is designed to provide a simple and intuitive experience through a series of menus. The program guides the user step-by-step to make the necessary selections:
 
-Category selection – the user chooses a product category from the available options.
+- **Category selection** the user chooses a product category from the available options.
 
-Season selection – the user selects a season to analyze.
+- **Season selection** the user selects a season to analyze.
 
-Brand selection – the user selects two different brands to compare from those available in the chosen category and season.
+- **Brand selection** the user selects two different brands to compare from those available in the chosen category and season.
 
 After the selections are made, the program validates the inputs to ensure that the chosen values exist in the dataset and that two distinct brands have been selected. If any input is invalid or unavailable, an error message is displayed, prompting the user to try again. Once the inputs are confirmed, the program performs the price comparison and displays the results clearly on the screen.
 
