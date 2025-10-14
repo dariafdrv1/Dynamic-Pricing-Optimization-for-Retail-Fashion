@@ -1,4 +1,4 @@
-# analyze_pick_and_plot.jl
+# step5_analyze_pick_and_plot.jl
 # Usage:
 #   julia --project analyze_pick_and_plot.jl /Users/marcelasantos/Desktop/Project/timeseries_sales.csv [/Users/marcelasantos/Desktop/Project]
 
