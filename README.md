@@ -69,7 +69,7 @@ This part presents the first interactive module of the project, implemented as a
 2. Run in you terminal with your own path: julia --project step1_compare_two_brands.jl "fashion_boutique_dataset.csv"
 3. It produces output
 
-## Step 2: Average Price Analysis
+# Step 2: Average Price Analysis
 
 The program proceeds to calculate and present the average prices for comparison. In this stage, the program identifies the average current prices of the products belonging to the selected brands. Moreover, the program associates the results with the selected season, allowing the analysis to take into account the seasonal context of the prices.
  
