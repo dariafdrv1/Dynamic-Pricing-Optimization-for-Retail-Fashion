@@ -69,44 +69,84 @@ This part presents the first interactive module of the project, implemented as a
 2. Run in you terminal with your own path: julia --project step1_compare_two_brands.jl "fashion_boutique_dataset.csv"
 3. It produces output
 
-# Step 2: Average Price Analysis
 
-The program proceeds to calculate and present the average prices for comparison. In this stage, the program identifies the average current prices of the products belonging to the selected brands. Moreover, the program associates the results with the selected season, allowing the analysis to take into account the seasonal context of the prices.
- 
-## Part 2: Data Visualization and Price Distribution Analysis
+# Step 2 — Avg Price by Brand (Bar Chart)
 
-This part of the project introduces the second module, implemented as a **menu-based program** that allows users to analyze and visualize how prices vary across all brands within a selected category and season. Unlike the first module, which focuses on comparing only two brands, this step provides a broader market overview by displaying price distributions for all available brands in the chosen segment.
+This module provides an interactive, menu-based bar chart of average current prices by brand within a selected category and season. After the user picks a category and season from the menus, the program filters the dataset and computes each brand’s average current price in that slice. It then renders a bar chart to visualize brand positioning (higher vs. lower priced brands) and prints a short summary (mean/median). If desired, the user can also save each chart as a PNG file. If the chosen slice has no rows or only one brand, the program notifies the user and lets them select again. The menu loop allows repeated exploration across categories and seasons.
 
-After the user selects a category and season from the menus, the program automatically filters the dataset to include only the rows that match those choices. If no data exists for the selected combination, or if there is only one brand in that category and season, the program notifies the user and allows them to make another selection.
+## How To Run
+	•	Download raw code: step2_avg_price_by_brand.jl
+	•	Run in your terminal (display only):
 
-For the valid selection, the program performs a **summary analysis** that calculates the total number of products, the **mean** and **median current prices**, and the **average price per brand**. The results are displayed directly in the console, giving the user an overview of pricing patterns within the chosen slice of data.
+julia --project step2_avg_price_by_brand.jl "fashion_boutique_dataset.csv"
 
-To enhance interpretability, the program also generates a **bar chart** illustrating the average current price for each brand. Each bar is labeled with the brand name and annotated with the corresponding price value, providing a clear and immediate visual comparison between brands. Users can choose whether they would like to save each chart as a PNG file for later reference.
 
-Once the visualization is complete, the program asks whether the user would like to analyze another category or season. If confirmed, the process repeats, allowing continuous exploration of price trends across the dataset. This interactive looping design enables users, retailers, and analysts to gain deeper insights into how brand pricing strategies vary across categories and seasonal contexts, supporting both consumer decision-making and competitive benchmarking.
-## Part 3: Interactive Exploration (Looped Visualization)
+	•	(Optional) Save charts to a folder:
 
-The third part of the program expands the analysis by allowing users to **continuously explore price patterns** across all brands, categories, and seasons in a single interactive session. Unlike the previous modules, which focus on one-time comparisons, this step introduces a **looped visualization system** that lets users generate multiple analyses without restarting the program.
+julia --project step2_avg_price_by_brand.jl "fashion_boutique_dataset.csv" "/Users/marcelasantos/Desktop/Project"
 
-Once the dataset is loaded and validated, the program automatically identifies all available categories and seasons directly from the data. This ensures that the user is always selecting from accurate, up-to-date options and prevents input errors such as typos or unavailable entries.
 
-After the user selects a category and a season, the program filters the dataset to display only the products that match those criteria. It then calculates the average current price for each brand, skipping any missing values to maintain reliable results.
+	•	It produces: an on-screen bar chart and (optionally) a PNG like
+avg_price_by_brand_[Category]_[Season].png.
 
-The filtered data is presented visually through a **bar chart**, where:
 
-- The **x-axis** represents the different brands.
 
-- The **y-axis** displays the average current price.
+# Step 3 — Simulate Time-Series Sales
 
-- Each bar is labeled with the brand name and annotated with the corresponding average price value.
+This module generates a synthetic weekly time series for 2024, creating sim_price and sim_demand for every brand × category × season combination present in the original dataset. Prices evolve with gentle volatility and seasonal effects; demand follows a downward-sloping relationship to price (constant-elasticity with noise). The result is a realistic, analysis-ready table you can use for elasticity estimation and plotting in the next steps.
 
-- The chart title clearly indicates the selected category and season.
+## How To Run
+	•	Download raw code: step3_simulate_timeseries_sales_aligned.jl
+	•	Run in your terminal:
 
-If there is no data available for the chosen combination, the program informs the user and returns to the selection phase without errors or interruptions.
+julia --project step3_simulate_timeseries_sales_aligned.jl
 
-After each visualization, the user is asked whether they would like to analyze another category or season. By confirming, the user can immediately repeat the process with new selections, enabling smooth and continuous exploration of pricing trends across the entire dataset. If the user chooses to exit, the program ends.
 
-This step enhances user interaction by combining automated data filtering, statistical summarization, and dynamic visualization in one continuous loop. It allows both consumers and analysts to easily observe how brand pricing strategies differ across various market conditions and seasonal contexts.
+	•	It produces: a CSV named timeseries_sales.csv (≈2.5k rows) with columns
+date, brand, category, season, sim_price, sim_demand.
+
+⸻
+
+# Step 4 — Elasticity Estimation and Summary
+
+This step estimates price elasticity of demand by fitting a log-log regression log(demand) ~ log(price) for each brand × category pair using the simulated time series. It returns a compact summary with the estimated elasticity, R² (fit quality), and number of observations per segment. The output can be cited in the report and used to guide which slices to visualize in Step 5.
+
+## How To Run
+	•	Option A — if you saved the script as step4_elasticity_summary.jl:
+
+julia --project step4_elasticity_summary.jl
+
+
+	•	Option B — run the short REPL snippet in Julia:
+
+using CSV, DataFrames, GLM, StatsModels, Statistics
+ts = CSV.read("/Users/marcelasantos/Desktop/Project/timeseries_sales.csv", DataFrame)
+ts = ts[(ts.sim_price .> 0) .& (ts.sim_demand .> 0), :]
+ts.log_p = log.(ts.sim_price); ts.log_q = log.(ts.sim_demand)
+function fit(g); m = lm(@formula(log_q ~ log_p), g); (coef(m)[2], r2(m)) end
+summ = DataFrame([(b=String(g.brand[1]), c=String(g.category[1]), n=nrow(g),
+                   β=fit(g)[1], r2=fit(g)[2]) for g in groupby(ts, [:brand,:category])])
+CSV.write("/Users/marcelasantos/Desktop/Project/elasticity_timeseries_summary.csv", summ)
+
+
+	•	It produces: elasticity_timeseries_summary.csv with columns
+brand, category, n, elasticity, r2.
+
+
+# Step 5 — Analyze, Pick & Plot (Interactive)
+
+This interactive module lets the user pick a brand, category, and season and immediately see a price-vs-demand scatter plot with a fitted curve. It uses the simulated weekly data, fits the same log-log model for the selected slice, and overlays the predicted relationship. Each plot is automatically saved as a PNG and opened on macOS, making it easy to collect visuals for the report.
+
+## How To Run
+	•	Download raw code: step5_analyze_pick_and_plot.jl
+	•	Run in your terminal:
+
+julia --project step5_analyze_pick_and_plot.jl "/Users/marcelasantos/Desktop/Project/timeseries_sales.csv"
+
+
+	•	It produces: a PNG like
+pvq_[Brand]_[Category]_[Season].png (e.g., pvq_HM_Shoes_Summer.png) and shows the plot.
+
 
 ## License 
 
