@@ -105,7 +105,7 @@ julia --project step3_simulate_timeseries_sales_aligned.jl
 	•	It produces: a CSV named timeseries_sales.csv (≈2.5k rows) with columns
 date, brand, category, season, sim_price, sim_demand.
 
-⸻
+
 
 # Step 4 — Elasticity Estimation and Summary
 
